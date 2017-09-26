@@ -1,0 +1,19 @@
+{
+  "name": "cds-services-tutorial",
+  "version": "1.0.0",
+  "description": "Example CDS Services",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kpshek/cds-services-tutorial.git"
+  },
+  "author": "Cerner",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/kpshek/cds-services-tutorial/issues"
+  },
+  "homepage": "https://github.com/kpshek/cds-services-tutorial#readme"
+}
