@@ -1,20 +1,21 @@
-let express = require('express');
-let cors = require('cors');
-let bodyParser = require('body-parser');
-let app = express();
+const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
 
 // This is necessary middleware to parse JSON into the incoming request body for POST requests
 app.use(bodyParser.json());
 
 /**
  * Security Considerations:
- * - CDS Services must implement CORS in order to be called from a web browser:
- * - See details here: http://cds-hooks.org/#security
+ * - CDS Services must implement CORS in order to be called from a web browser
  */
 app.use((request, response, next) => {
   response.setHeader('Access-Control-Allow-Origin', '*');
   response.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  response.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Authorization');
+  response.setHeader('Access-Control-Allow-Credentials', 'true');
+  response.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  response.setHeader('Access-Control-Expose-Headers', 'Origin, Accept, Content-Location, ' +
+    'Location, X-Requested-With');
 
   // Pass to next layer of middleware
   next();
@@ -52,7 +53,7 @@ app.get('/cds-services', (request, response) => {
   const discoveryEndpointServices = {
     services: [ patientViewExample, medicationPrescribeExample ]
   };
-  response.json(discoveryEndpointServices);
+  response.send(JSON.stringify(discoveryEndpointServices, null, 2));
 });
 
 /**
@@ -82,7 +83,7 @@ app.post('/cds-services/patient-view-example', (request, response) => {
       }
     ]
   };
-  response.json(patientViewCard);
+  response.send(JSON.stringify(patientViewCard, null, 2));
 });
 
 /**
@@ -101,8 +102,8 @@ app.post('/cds-services/medication-prescribe-example', (request, response) => {
 
   // Check if a medication was chosen by the provider to be ordered
   if (context.medicationCodeableConcept) {
-    const responseCard = createResponseCard(context); // see function below for more details
-    response.json(responseCard);
+    const responseCard = createMedicationResponseCard(context); // see function below for more details
+    response.send(JSON.stringify(responseCard, null, 2));
   }
   response.status(200);
 });
@@ -112,7 +113,7 @@ app.post('/cds-services/medication-prescribe-example', (request, response) => {
  * @param context - The FHIR context of the medication being ordered by the provider
  * @returns {{cards: *[]}} - Either a card with the suggestion to switch medication or a textual info card
  */
-function createResponseCard(context) {
+function createMedicationResponseCard(context) {
   const providerOrderedMedication = context.medicationCodeableConcept.coding[0].code;
 
   // Check if medication being ordered is our recommended Aspirin 81 MG Oral Tablet
@@ -170,6 +171,4 @@ function createResponseCard(context) {
 }
 
 // Here is where we define the port for the localhost server to setup
-app.listen(3000, () => {
-  console.log('Example CDS Services listening on port 3000');
-});
+app.listen(3000);
