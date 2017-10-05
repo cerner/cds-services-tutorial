@@ -4,7 +4,7 @@
   "description": "Example CDS Services",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start-server": "nodemon ./index.js localhost 3000"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,12 @@
   "bugs": {
     "url": "https://github.com/kpshek/cds-services-tutorial/issues"
   },
-  "homepage": "https://github.com/kpshek/cds-services-tutorial#readme"
+  "homepage": "https://github.com/kpshek/cds-services-tutorial#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.15.5"
+  },
+  "devDependencies": {
+    "nodemon": "^1.12.1"
+  }
 }
