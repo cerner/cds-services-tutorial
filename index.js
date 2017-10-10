@@ -73,6 +73,10 @@ app.post('/cds-services/patient-view-example', (request, response) => {
         // Use the patient's First and Last name
         summary: 'Now seeing: ' + patientResource.name[0].given[0] + ' ' + patientResource.name[0].family[0],
         indicator: 'info',
+        source: {
+          label: 'CDS Service Tutorial',
+          url: 'https://github.com/cerner/cds-services-tutorial/wiki/Patient-View-Service'
+        },
         links: [
           {
             label: 'Learn more about CDS Hooks',
@@ -124,7 +128,11 @@ function createMedicationResponseCard(context) {
       cards: [
         {
           summary: 'Currently prescribing a low-dose Aspirin',
-          indicator: 'info'
+          indicator: 'info',
+          source: {
+            label: 'CDS Service Tutorial',
+            url: 'https://github.com/cerner/cds-services-tutorial/wiki/Medication-Prescribe-Service'
+          }
         }
       ]
     };
@@ -161,8 +169,8 @@ function createMedicationResponseCard(context) {
             }
           ],
           source: {
-            label: 'Learn more about Suggestions',
-            url: 'http://cds-hooks.org/#cds-service-response'
+            label: 'CDS Service Tutorial',
+            url: 'https://github.com/cerner/cds-services-tutorial/wiki/Medication-Prescribe-Service'
           }
         }
       ]
