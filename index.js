@@ -102,7 +102,7 @@ app.post('/cds-services/patient-view-example', (request, response) => {
 app.post('/cds-services/medication-prescribe-example', (request, response) => {
 
   // Parse the request body for the FHIR context provided by the EHR. In this case, the MedicationOrder resource
-  const context = request.body.context[0];
+  const context = request.body.context.medications[0];
 
   // Check if a medication was chosen by the provider to be ordered
   if (context.medicationCodeableConcept) {
@@ -163,6 +163,7 @@ function createMedicationResponseCard(context) {
               actions: [
                 {
                   type: 'create',
+                  description: 'Modifying existing medication order to be Aspirin',
                   resource: newMedicationOrder
                 }
               ]
