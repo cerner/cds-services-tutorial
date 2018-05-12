@@ -25,7 +25,7 @@ app.use((request, response, next) => {
  * Discovery Endpoint:
  * - A GET request to the discovery endpoint, or URL path ending in '/cds-services'
  * - This function should respond with definitions of each CDS Service for this app in JSON format
- * - See details here: http://cds-hooks.org/#discovery
+ * - See details here: http://cds-hooks.org/specification/1.0/#discovery
  */
 app.get('/cds-services', (request, response) => {
 
@@ -37,8 +37,8 @@ app.get('/cds-services', (request, response) => {
     description: 'Displays the name and gender of the patient',
     prefetch: {
       // Request the Patient FHIR resource for the patient in context, where the EHR fills out the prefetch template
-      // See details here: http://cds-hooks.org/#a-performance-tweak
-      requestedPatient: 'Patient/{{Patient.id}}'
+      // See details here: http://cds-hooks.org/specification/1.0/#prefetch-template
+      requestedPatient: 'Patient/{{context.patientId}}'
     }
   };
 
@@ -102,7 +102,7 @@ app.post('/cds-services/patient-view-example', (request, response) => {
 app.post('/cds-services/medication-prescribe-example', (request, response) => {
 
   // Parse the request body for the FHIR context provided by the EHR. In this case, the MedicationOrder resource
-  const context = request.body.context.medications[0];
+  const context = request.body.context.medications.entry[0].resource;
 
   // Check if a medication was chosen by the provider to be ordered
   if (context.medicationCodeableConcept) {
