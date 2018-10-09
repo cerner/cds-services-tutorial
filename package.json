@@ -8,19 +8,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kpshek/cds-services-tutorial.git"
+    "url": "git+https://github.com/cerner/cds-services-tutorial.git"
   },
   "author": "Cerner",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/kpshek/cds-services-tutorial/issues"
+    "url": "https://github.com/cerner/cds-services-tutorial/issues"
   },
-  "homepage": "https://github.com/kpshek/cds-services-tutorial#readme",
+  "homepage": "https://github.com/cerner/cds-services-tutorial#readme",
   "dependencies": {
-    "body-parser": "^1.18.2",
-    "express": "^4.15.5"
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3"
   },
   "devDependencies": {
-    "nodemon": "^1.12.1"
+    "nodemon": "^1.18.4"
   }
 }
