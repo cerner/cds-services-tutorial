@@ -42,16 +42,16 @@ app.get('/cds-services', (request, response) => {
     }
   };
 
-  // Example service to invoke the medication-prescribe hook
-  const medicationPrescribeExample = {
-    hook: 'medication-prescribe',
-    id: 'medication-prescribe-example',
-    title: 'Example medication-prescribe CDS Service',
+  // Example service to invoke the order-select hook
+  const orderSelectExample = {
+    hook: 'order-select',
+    id: 'order-select-example',
+    title: 'Example order-select CDS Service',
     description: 'Suggests prescribing Aspirin 81 MG Oral Tablets',
   };
 
   const discoveryEndpointServices = {
-    services: [ patientViewExample, medicationPrescribeExample ]
+    services: [ patientViewExample, orderSelectExample ]
   };
   response.send(JSON.stringify(discoveryEndpointServices, null, 2));
 });
@@ -91,22 +91,22 @@ app.post('/cds-services/patient-view-example', (request, response) => {
 });
 
 /**
- * Medication Prescribe Example Service:
- * - Handles POST requests to the medication-prescribe-example endpoint
- * - This function should respond with an array of cards in JSON format for the medication-prescribe hook
+ * Order Select Example Service:
+ * - Handles POST requests to the order-select-example endpoint
+ * - This function should respond with an array of cards in JSON format for the order-select hook
  *
  * - Service purpose: Upon a provider choosing a medication to prescribe, display a suggestion for the
  *                    provider to change their chosen medication to the service-recommended Aspirin 81 MG Oral Tablet,
  *                    or display text that affirms the provider is currently prescribing the service-recommended Aspirin
  */
-app.post('/cds-services/medication-prescribe-example', (request, response) => {
+app.post('/cds-services/order-select-example', (request, response) => {
 
-  // Parse the request body for the FHIR context provided by the EHR. In this case, the MedicationOrder resource
-  const context = request.body.context.medications.entry[0].resource;
+  // Parse the request body for the FHIR context provided by the EHR. In this case, the MedicationRequest/MedicationOrder resource
+  const draftOrder = request.body.context.draftOrders.entry[0].resource;
 
   // Check if a medication was chosen by the provider to be ordered
-  if (context.medicationCodeableConcept) {
-    const responseCard = createMedicationResponseCard(context); // see function below for more details
+  if (['MedicationRequest','MedicationOrder'].includes(draftOrder.resourceType) && draftOrder.medicationCodeableConcept) {
+    const responseCard = createMedicationResponseCard(draftOrder); // see function below for more details
     response.send(JSON.stringify(responseCard, null, 2));
   }
   response.status(200);
@@ -131,18 +131,18 @@ function createMedicationResponseCard(context) {
           indicator: 'info',
           source: {
             label: 'CDS Service Tutorial',
-            url: 'https://github.com/cerner/cds-services-tutorial/wiki/Medication-Prescribe-Service'
+            url: 'https://github.com/cerner/cds-services-tutorial/wiki/Order-Select-Service'
           }
         }
       ]
     };
   } else {
-    // 1. Copy the current MedicationOrder resource the provider intends to prescribe
+    // 1. Copy the current MedicationRequest/MedicationOrder resource the provider intends to prescribe
     // 2. Change the medication being ordered by the provider to our recommended Aspirin 81 MG Oral Tablet
-    // 3. Add a suggestion to a card to replace the provider's MedicationOrder resource with the CDS Service
+    // 3. Add a suggestion to a card to replace the provider's MedicationRequest/MedicationOrder resource with the CDS Service
     //    copy instead, if the provider clicks on the suggestion button
-    let newMedicationOrder = context;
-    newMedicationOrder.medicationCodeableConcept = {
+    let newMedicationRequest = context;
+    newMedicationRequest.medicationCodeableConcept = {
       text: 'Aspirin 81 MG Oral Tablet',
       coding: [
         {
@@ -152,6 +152,7 @@ function createMedicationResponseCard(context) {
         }
       ]
     };
+
     return {
       cards: [
         {
@@ -164,14 +165,14 @@ function createMedicationResponseCard(context) {
                 {
                   type: 'create',
                   description: 'Modifying existing medication order to be Aspirin',
-                  resource: newMedicationOrder
+                  resource: newMedicationRequest
                 }
               ]
             }
           ],
           source: {
             label: 'CDS Service Tutorial',
-            url: 'https://github.com/cerner/cds-services-tutorial/wiki/Medication-Prescribe-Service'
+            url: 'https://github.com/cerner/cds-services-tutorial/wiki/Order-Select-Service'
           }
         }
       ]
