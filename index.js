@@ -103,9 +103,11 @@ app.post('/cds-services/order-select-example', (request, response) => {
 
   // Parse the request body for the FHIR context provided by the EHR. In this case, the MedicationRequest/MedicationOrder resource
   const draftOrder = request.body.context.draftOrders.entry[0].resource;
+  const selections = request.body.context.selections;
 
   // Check if a medication was chosen by the provider to be ordered
-  if (['MedicationRequest','MedicationOrder'].includes(draftOrder.resourceType) && draftOrder.medicationCodeableConcept) {
+  if (['MedicationRequest', 'MedicationOrder'].includes(draftOrder.resourceType) && selections.includes(`${draftOrder.resourceType}/${draftOrder.id}`)
+    && draftOrder.medicationCodeableConcept) {
     const responseCard = createMedicationResponseCard(draftOrder); // see function below for more details
     response.send(JSON.stringify(responseCard, null, 2));
   }
