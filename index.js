@@ -22,6 +22,39 @@ app.use((request, response, next) => {
 });
 
 /**
+ * Authorization.
+ * - CDS Services should only allow calls from trusted CDS Clients
+ */
+app.use((request, response, next) => {
+  // Always allow OPTIONS requests as part of CORS pre-flight support.
+  if (request.method === 'OPTIONS') {
+    next();
+    return;
+  }
+
+  const serviceHost = request.get('Host');
+  const authorizationHeader = request.get('Authorization') || 'Bearer open'; // Default a token until ready to enable auth.
+
+  if (!authorizationHeader || !authorizationHeader.startsWith('Bearer')) {
+    response.set('WWW-Authenticate', `Bearer realm="${serviceHost}", error="invalid_token", error_description="No Bearer token provided."`)
+    return response.status(401).end();
+  }
+
+  const token = authorizationHeader.replace('Bearer ', '');
+  const aud = `${request.protocol}://${serviceHost}/${request.originalUrl}`;
+
+  const isValid = true; // Verify token validity per https://cds-hooks.org/specification/1.0/#trusting-cds-client
+
+  if (!isValid) {
+    response.set('WWW-Authenticate', `Bearer realm="${serviceHost}", error="invalid_token", error_description="Token error description."`)
+    return response.status(401).end();
+  }
+
+  // Pass to next layer of middleware
+  next();
+})
+
+/**
  * Discovery Endpoint:
  * - A GET request to the discovery endpoint, or URL path ending in '/cds-services'
  * - This function should respond with definitions of each CDS Service for this app in JSON format
