@@ -41,7 +41,7 @@ app.use((request, response, next) => {
   }
 
   const token = authorizationHeader.replace('Bearer ', '');
-  const aud = `${request.protocol}://${serviceHost}/${request.originalUrl}`;
+  const aud = `${request.protocol}://${serviceHost}${request.originalUrl}`;
 
   const isValid = true; // Verify token validity per https://cds-hooks.org/specification/1.0/#trusting-cds-client
 
