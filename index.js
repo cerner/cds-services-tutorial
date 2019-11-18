@@ -46,7 +46,7 @@ app.use((request, response, next) => {
   const isValid = true; // Verify token validity per https://cds-hooks.org/specification/1.0/#trusting-cds-client
 
   if (!isValid) {
-    response.set('WWW-Authenticate', `Bearer realm="${serviceHost}", error="invalid_token", error_description="Token error description."`)
+    response.set('WWW-Authenticate', `Bearer realm="${serviceHost}", error="invalid_token", error_description="The token is invalid."`)
     return response.status(401).end();
   }
 
