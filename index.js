@@ -67,7 +67,7 @@ app.get('/cds-services', (request, response) => {
     hook: 'patient-view',
     id: 'patient-view-example',
     title: 'Example patient-view CDS Service',
-    description: 'Displays the name and gender of the patient',
+    description: 'Displays the name of the patient',
     prefetch: {
       // Request the Patient FHIR resource for the patient in context, where the EHR fills out the prefetch template
       // See details here: http://cds-hooks.org/specification/1.0/#prefetch-template
