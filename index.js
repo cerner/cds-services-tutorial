@@ -43,7 +43,7 @@ app.use((request, response, next) => {
   const token = authorizationHeader.replace('Bearer ', '');
   const aud = `${request.protocol}://${serviceHost}${request.originalUrl}`;
 
-  const isValid = true; // Verify token validity per https://cds-hooks.org/specification/1.0/#trusting-cds-client
+  const isValid = true; // Verify token validity per https://cds-hooks.org/specification/current/#trusting-cds-clients
 
   if (!isValid) {
     response.set('WWW-Authenticate', `Bearer realm="${serviceHost}", error="invalid_token", error_description="The token is invalid."`)
@@ -58,7 +58,7 @@ app.use((request, response, next) => {
  * Discovery Endpoint:
  * - A GET request to the discovery endpoint, or URL path ending in '/cds-services'
  * - This function should respond with definitions of each CDS Service for this app in JSON format
- * - See details here: http://cds-hooks.org/specification/1.0/#discovery
+ * - See details here: https://cds-hooks.org/specification/current/#discovery
  */
 app.get('/cds-services', (request, response) => {
 
@@ -70,7 +70,7 @@ app.get('/cds-services', (request, response) => {
     description: 'Displays the name of the patient',
     prefetch: {
       // Request the Patient FHIR resource for the patient in context, where the EHR fills out the prefetch template
-      // See details here: http://cds-hooks.org/specification/1.0/#prefetch-template
+      // See details here: https://cds-hooks.org/specification/current/#prefetch-template
       requestedPatient: 'Patient/{{context.patientId}}'
     }
   };
@@ -113,7 +113,7 @@ app.post('/cds-services/patient-view-example', (request, response) => {
         links: [
           {
             label: 'Learn more about CDS Hooks',
-            url: 'http://cds-hooks.org',
+            url: 'https://cds-hooks.org',
             type: 'absolute'
           }
         ]
